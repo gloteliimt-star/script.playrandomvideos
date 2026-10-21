@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.playrandomvideos" name="Play Random Videos" version="2.1.1" provider-name="rmrector">
+<addon id="script.playrandomvideos" name="Play Random Videos" version="2.1.13" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0" />
 	</requires>
@@ -7,11 +7,11 @@
 		<menu id="kodi.core.main">
 			<item library="python/context.py">
 				<label>32100</label>
-				<visible>!Skin.HasSetting(disablecontext:script.playrandomvideos) + [Window.IsVisible(videos) | String.IsEqual(ListItem.DBTYPE, set) | String.IsEqual(ListItem.DBTYPE, tvshow) | String.IsEqual(ListItem.DBTYPE, season)] + ListItem.IsFolder + !ListItem.IsParentFolder + ![String.StartsWith(ListItem.FolderPath, plugin) | String.StartsWith(ListItem.FolderPath, addons) | String.StartsWith(ListItem.FolderPath, sources)] + !String.IsEqual(ListItem.FolderPath, add)</visible>
+				<visible>!Skin.HasSetting(disablecontext:script.playrandomvideos) + [ListItem.IsFolder | Window.IsVisible(favourites) | String.StartsWith(ListItem.FolderPath, ActivateWindow) | String.StartsWith(ListItem.FolderPath, favourites)] + !ListItem.IsParentFolder + ![String.StartsWith(ListItem.FolderPath, plugin) | String.StartsWith(ListItem.FolderPath, addons) | String.StartsWith(ListItem.FolderPath, sources)] + !String.IsEqual(ListItem.FolderPath, add)</visible>
 			</item>
 			<item library="python/context_single.py">
 				<label>32099</label>
-				<visible>Skin.HasSetting(enablecontext:script.playrandomvideos.single) + [Window.IsVisible(videos) | String.IsEqual(ListItem.DBTYPE, set) | String.IsEqual(ListItem.DBTYPE, tvshow) | String.IsEqual(ListItem.DBTYPE, season)] + ListItem.IsFolder + !ListItem.IsParentFolder + ![String.StartsWith(ListItem.FolderPath, plugin) | String.StartsWith(ListItem.FolderPath, addons) | String.StartsWith(ListItem.FolderPath, sources)] + !String.IsEqual(ListItem.FolderPath, add)</visible>
+				<visible>Skin.HasSetting(enablecontext:script.playrandomvideos.single) + [ListItem.IsFolder | Window.IsVisible(favourites) | String.StartsWith(ListItem.FolderPath, ActivateWindow) | String.StartsWith(ListItem.FolderPath, favourites)] + !ListItem.IsParentFolder + ![String.StartsWith(ListItem.FolderPath, plugin) | String.StartsWith(ListItem.FolderPath, addons) | String.StartsWith(ListItem.FolderPath, sources)] + !String.IsEqual(ListItem.FolderPath, add)</visible>
 			</item>
 		</menu>
 	</extension>
@@ -19,7 +19,24 @@
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en_GB">Plays random videos from all sorts of lists.</summary>
 		<description lang="en_GB">This add-on can quickly play random episodes from TV shows, movies from genres/sets/years/tags, and videos from playlists, the filesystem, and just about anything else, other than plugins.</description>
-		<news>v2.1.1 (2023-05-09)
+		<news>v2.1.11 (2026-10-20) - unofficial fork
+- Feature: Cooldown setting (0-48 hours, 0 = off, default 24). Unwatched videos are always played first; once everything in a list is watched, videos played within the cooldown window are skipped. If that would leave nothing to play, the cooldown is ignored. Recent plays are kept in history.json in the add-on's data folder and old entries are removed automatically
+
+v2.1.10 (2026-10-15) - unofficial fork, changes since 2.1.1
+- Fix: playlist stopped being topped up after a few videos on current Kodi. The add-on gave up during the short gap between videos; it now keeps checking and waits up to 2 minutes for the next video to start (slow network sources can take a while)
+- Fix: clicking a video in the playlist could empty the list. Old videos are now trimmed one at a time
+- Fix: starting random play on a new list while another was running kept adding videos from the old list. A new random play now takes over
+- Fix: 'Not played recently' choice from the video view was ignored
+- Fix: possible error with the recently played filter on folders from the file system
+- Fix: Python 3.10+ support in log output (one leftover use of `collections.Iterable`)
+- Fix: use of `xbmc.LOGNOTICE`, which newer Kodi no longer has
+- Feature: 'Play random' context item now shows in lists in every window, including Favourites and shortcuts
+- Feature: random play from Favourites. The folder is looked up from the favourite
+- Feature: folders that Kodi refuses to list (WebDAV and other network locations outside a known video source) are now listed directly, instead of showing the 'non-permanent source' message
+- Feature: when random play can't be used on an item, a message shows the item's name and path
+- Feature: more activity written to kodi.log (videos queued, why playback finished)
+
+v2.1.1 (2023-05-09)
 - Fix: recently played filter
 
 v2.1.0 (2022-02-20)

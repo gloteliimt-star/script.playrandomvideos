@@ -1,3 +1,27 @@
+v2.1.13 (2026-10-20) - unofficial fork
+- Change: the strict full-cycle rule is replaced by a prioritized blend, better suited to large libraries. With the Cooldown setting above 0, videos played within the cooldown window are never picked, videos not played before (tracked in history.json, since Kodi's playcount is not updated for WebDAV/Debrid) are picked most of the time (85%), and a video whose cooldown has expired can be picked again at any time, even while unplayed videos remain. If the cooldown would leave nothing to play it is ignored. Once every video has been played the unplayed priority starts over. Applies to folders, playlists and library lists
+
+v2.1.12 (2026-10-20) - unofficial fork
+- Fix: cycles are now tracked in history.json instead of Kodi's playcount, which is never updated for WebDAV/AllDebrid sources (everything always looked unplayed, so the cooldown never kicked in). Every video of a folder, playlist or library list is played once per cycle; when all are done the cycle resets and the Cooldown window applies to avoid immediate repeats. The cycle length follows the number of files currently in the list. Works with the Cooldown setting above 0; Kodi's playcount is ignored in that case
+- Old history.json files are still read. history.json now also holds the per-list cycle progress (lists not used for 90 days are forgotten)
+
+v2.1.11 (2026-10-20) - unofficial fork
+- Feature: Cooldown setting (0-48 hours, 0 = off, default 24). Unwatched videos are always played first; once everything in a list is watched, videos played within the cooldown window are skipped. If that would leave nothing to play, the cooldown is ignored. Recent plays are kept in history.json in the add-on's data folder and old entries are removed automatically
+
+v2.1.10 (2026-10-15) - unofficial fork, changes since 2.1.1
+- Fix: playlist stopped being topped up after a few videos on current Kodi. The add-on gave up during the short gap between videos; it now keeps checking and waits up to 2 minutes for the next video to start (slow network sources can take a while)
+- Fix: clicking a video in the playlist could empty the list. Old videos are now trimmed one at a time
+- Fix: starting random play on a new list while another was running kept adding videos from the old list. A new random play now takes over
+- Fix: 'Not played recently' choice from the video view was ignored
+- Fix: possible error with the recently played filter on folders from the file system
+- Fix: Python 3.10+ support in log output (one leftover use of `collections.Iterable`)
+- Fix: use of `xbmc.LOGNOTICE`, which newer Kodi no longer has
+- Feature: 'Play random' context item now shows in lists in every window, including Favourites and shortcuts
+- Feature: random play from Favourites. The folder is looked up from the favourite
+- Feature: folders that Kodi refuses to list (WebDAV and other network locations outside a known video source) are now listed directly, instead of showing the 'non-permanent source' message
+- Feature: when random play can't be used on an item, a message shows the item's name and path
+- Feature: more activity written to kodi.log (videos queued, why playback finished)
+
 v2.1.1 (2023-05-09)
 - Fix: recently played filter
 
